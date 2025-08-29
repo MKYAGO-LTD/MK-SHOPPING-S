@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kyago Shop - Frontend-Backend Integration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --info: #1abc9c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: var(--secondary);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 0 0 10px 10px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 25px 0 15px;
+            color: var(--secondary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin: 20px 0 15px;
+            color: var(--dark);
+        }
+
+        p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .endpoint {
+            background: var(--light);
+            padding: 10px 15px;
+            border-left: 4px solid var(--primary);
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 5px 10px;
+            background: var(--primary);
+            color: white;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-success:hover {
+            background: #27ae60;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .demo-area {
+            background: white;
+            border: 2px solid var(--light);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .response-area {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 20px;
+            min-height: 100px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--light);
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .diagram {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .diagram img {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .diagram-placeholder {
+            background: #f0f0f0;
+            padding: 40px;
+            text-align: center;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 10px 10px 0 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Kyago Shop - Frontend-Backend Integration</h1>
+            <p>Learn how to connect your e-commerce frontend with a backend system</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Frontend-Backend Communication</h2>
+            <p>Modern web applications separate the frontend (client-side) from the backend (server-side). They communicate through APIs (Application Programming Interfaces) using HTTP requests.</p>
+            
+            <div class="flow-step">
+                <div class="step-number">1</div>
+                <div>Frontend sends HTTP request to backend API</div>
+            </div>
+            
+            <div class="flow-step">
+                <div class="step-number">2</div>
+                <div>Backend processes request, interacts with database</div>
+            </div>
+            
+            <div class="flow-step">
+                <div class="step-number">3</div>
+                <div>Backend sends HTTP response with data (usually JSON)</div>
+            </div>
+            
+            <div class="flow-step">
+                <div class="step-number">4</div>
+                <div>Frontend receives response and updates UI</div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>Frontend (Client-Side)</h2>
+                <p>The frontend is what users interact with directly. For Kyago Shop, this includes:</p>
+                <ul>
+                    <li>Product listings and search</li>
+                    <li>Shopping cart</li>
+                    <li>User registration/login forms</li>
+                    <li>Checkout process</li>
+                    <li>Order history</li>
+                </ul>
+                <p>Frontend technologies: HTML, CSS, JavaScript, React/Vue/Angular</p>
+            </div>
+
+            <div class="card">
+                <h2>Backend (Server-Side)</h2>
+                <p>The backend handles business logic, data processing, and storage. For Kyago Shop, this includes:</p>
+                <ul>
+                    <li>User authentication and authorization</li>
+                    <li>Product inventory management</li>
+                    <li>Order processing</li>
+                    <li>Payment integration</li>
+                    <li>Database operations</li>
+                </ul>
+                <p>Backend technologies: Node.js, Python, PHP, Java, Databases (MySQL, MongoDB)</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>API Endpoints Examples</h2>
+            <p>RESTful APIs use different HTTP methods for different operations:</p>
+            
+            <div class="endpoint">
+                <span class="method">GET</span>
+                <span>/api/products - Retrieve product list</span>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method">GET</span>
+                <span>/api/products/123 - Get details for product 123</span>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method">POST</span>
+                <span>/api/orders - Create a new order</span>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method">PUT</span>
+                <span>/api/users/profile - Update user profile</span>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method">DELETE</span>
+                <span>/api/products/123 - Delete product 123</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Frontend-Backend Communication Demo</h2>
+            <p>This demo simulates how the frontend communicates with the backend using JavaScript's Fetch API.</p>
+
+            <div class="tabs">
+                <div class="tab active" data-tab="products">Get Products</div>
+                <div class="tab" data-tab="add-product">Add Product</div>
+                <div class="tab" data-tab="order">Create Order</div>
+            </div>
+
+            <div class="tab-content active" id="products">
+                <p>Retrieve product list from the backend:</p>
+                <div class="code-block">
+// Frontend JavaScript code
+fetch('https://api.kyagoshop.com/products')
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+    // Update UI with product data
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+                </div>
+                <button class="btn btn-success" id="getProducts">Simulate GET Request</button>
+            </div>
+
+            <div class="tab-content" id="add-product">
+                <p>Send product data to the backend:</p>
+                <div class="code-block">
+// Frontend JavaScript code
+const productData = {
+  name: 'New Product',
+  price: 29.99,
+  category: 'electronics'
+};
+
+fetch('https://api.kyagoshop.com/products', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(productData)
+})
+  .then(response => response.json())
+  .then(data => {
+    console.log('Product added:', data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+                </div>
+                <button class="btn btn-success" id="addProduct">Simulate POST Request</button>
+            </div>
+
+            <div class="tab-content" id="order">
+                <p>Submit an order to the backend:</p>
+                <div class="code-block">
+// Frontend JavaScript code
+const orderData = {
+  userId: 123,
+  products: [
+    { id: 456, quantity: 2 },
+    { id: 789, quantity: 1 }
+  ],
+  total: 89.97
+};
+
+fetch('https://api.kyagoshop.com/orders', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ' + authToken
+  },
+  body: JSON.stringify(orderData)
+})
+  .then(response => response.json())
+  .then(data => {
+    console.log('Order created:', data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+                </div>
+                <button class="btn btn-success" id="createOrder">Simulate Order Request</button>
+            </div>
+
+            <div class="response-area" id="apiResponse">
+                Response will appear here...
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Backend API Response Examples</h2>
+            <p>Backend APIs typically return JSON data. Here are examples of responses:</p>
+
+            <h3>Products Response</h3>
+            <div class="code-block">
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "name": "Wireless Headphones",
+      "price": 59.99,
+      "category": "electronics",
+      "inStock": true
+    },
+    {
+      "id": 2,
+      "name": "Running Shoes",
+      "price": 89.99,
+      "category": "sports",
+      "inStock": true
+    }
+  ]
+}
+            </div>
+
+            <h3>Error Response</h3>
+            <div class="code-block">
+{
+  "success": false,
+  "error": {
+    "code": "AUTH_001",
+    "message": "Authentication required"
+  }
+}
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Implementation Steps</h2>
+            
+            <h3>1. Design Your API</h3>
+            <p>Plan the endpoints, request methods, and data formats.</p>
+            
+            <h3>2. Implement Backend API</h3>
+            <p>Create the server-side logic using Node.js/Express, Python/Django, PHP/Laravel, etc.</p>
+            
+            <h3>3. Implement Frontend API Calls</h3>
+            <p>Use Fetch API or libraries like Axios to make HTTP requests.</p>
+            
+            <h3>4. Handle Authentication</h3>
+            <p>Implement JWT or session-based authentication for secure requests.</p>
+            
+            <h3>5. Error Handling</h3>
+            <p>Implement proper error handling on both frontend and backend.</p>
+            
+            <h3>6. Testing</h3>
+            <p>Test all API endpoints with tools like Postman or Insomnia.</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>Kyago Shop - Complete E-commerce Solution</p>
+            <p>Frontend-Backend Integration Example</p>
+        </div>
+    </footer>
+
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // API simulation
+        document.getElementById('getProducts').addEventListener('click', () => {
+            const response = {
+                success: true,
+                data: [
+                    { id: 1, name: "Wireless Headphones", price: 59.99, category: "electronics" },
+                    { id: 2, name: "Running Shoes", price: 89.99, category: "sports" },
+                    { id: 3, name: "Smart Watch", price: 129.99, category: "electronics" }
+                ]
+            };
+            document.getElementById('apiResponse').textContent = JSON.stringify(response, null, 2);
+        });
+
+        document.getElementById('addProduct').addEventListener('click', () => {
+            const response = {
+                success: true,
+                message: "Product added successfully",
+                data: {
+                    id: 101,
+                    name: "New Product",
+                    price: 29.99,
+                    category: "electronics"
+                }
+            };
+            document.getElementById('apiResponse').textContent = JSON.stringify(response, null, 2);
+        });
+
+        document.getElementById('createOrder').addEventListener('click', () => {
+            const response = {
+                success: true,
+                message: "Order created successfully",
+                data: {
+                    orderId: "ORD-7890",
+                    total: 89.97,
+                    status: "processing"
+                }
+            };
+            document.getElementById('apiResponse').textContent = JSON.stringify(response, null, 2);
+        });
+    </script>
+</body>
+</html>

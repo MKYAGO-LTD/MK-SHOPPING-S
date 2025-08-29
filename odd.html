@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mkyago Bet - Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a472a;
+            --secondary: #2e8b57;
+            --accent: #00cc66;
+            --dark: #121212;
+            --light: #f4f4f4;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --success: #2ecc71;
+            --gray: #95a5a6;
+            --card-bg: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+        
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            padding: 5px 15px !important;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-outline-light:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Dashboard Styles */
+        .dashboard {
+            padding: 30px 0;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .stat-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 204, 102, 0.1);
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+        
+        .stat-card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .stat-card-title {
+            font-size: 1rem;
+            color: var(--gray);
+        }
+        
+        .positive {
+            color: var(--success);
+        }
+        
+        .negative {
+            color: var(--danger);
+        }
+        
+        /* Sports Navigation */
+        .sports-nav {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .sports-nav .nav-link {
+            color: var(--dark) !important;
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin-right: 5px;
+        }
+        
+        .sports-nav .nav-link.active {
+            background: var(--secondary);
+            color: white !important;
+        }
+        
+        /* Match Cards */
+        .match-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 15px;
+            transition: transform 0.3s;
+        }
+        
+        .match-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .match-time {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+        
+        .team-name {
+            font-weight: 500;
+        }
+        
+        .odds-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .odds-btn:hover {
+            background: var(--primary);
+        }
+        
+        .live-badge {
+            background: var(--danger);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+        
+        /* Tabs */
+        .nav-tabs .nav-link {
+            color: var(--dark);
+            font-weight: 500;
+            padding: 10px 20px;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--secondary);
+            border-bottom: 3px solid var(--secondary);
+        }
+        
+        /* Virtual Games */
+        .virtual-game {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .virtual-game:hover {
+            transform: translateY(-5px);
+        }
+        
+        .virtual-game-img {
+            height: 120px;
+            background: linear-gradient(45deg, #2e8b57, #1a472a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 50px;
+        }
+        
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .social-icons a {
+            color: white;
+            font-size: 1.2rem;
+            margin-right: 15px;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .stat-card-value {
+                font-size: 1.5rem;
+            }
+            
+            .sports-nav {
+                padding: 10px;
+            }
+            
+            .sports-nav .nav-link {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="logo">
+                    <i class="fas fa-dice"></i>
+                    <span>Mkyago Bet</span>
+                </div>
+                
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="fas fa-home"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-coins"></i> Bets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-users"></i> Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-cog"></i> Settings</a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-outline-light me-2"><i class="fas fa-bell"></i></button>
+                    <button class="btn btn-outline-light me-2"><i class="fas fa-user"></i> Admin</button>
+                    <button class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Dashboard Section -->
+    <section class="dashboard">
+        <div class="container">
+            <h1 class="mb-4">Dashboard Overview</h1>
+            
+            <!-- Stats Cards -->
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="stat-card-title">Total Users</div>
+                            <div class="stat-card-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value">12,584</div>
+                        <div class="stat-card-change positive">
+                            <i class="fas fa-arrow-up"></i> 12.5% from last month
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="stat-card-title">Active Bets</div>
+                            <div class="stat-card-icon">
+                                <i class="fas fa-dice"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value">2,367</div>
+                        <div class="stat-card-change positive">
+                            <i class="fas fa-arrow-up"></i> 5.3% from last week
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="stat-card-title">Total Revenue</div>
+                            <div class="stat-card-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value">$184,290</div>
+                        <div class="stat-card-change positive">
+                            <i class="fas fa-arrow-up"></i> 8.2% from last month
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="stat-card-title">Payouts</div>
+                            <div class="stat-card-icon">
+                                <i class="fas fa-hand-holding-usd"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value">$132,560</div>
+                        <div class="stat-card-change negative">
+                            <i class="fas fa-arrow-up"></i> 3.7% from last month
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sports Navigation -->
+            <div class="sports-nav">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Football</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Basketball</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Tennis</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Netball</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Virtual Sports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Live Games</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">eSports</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Tabs for Leagues -->
+            <ul class="nav nav-tabs mb-4">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">English Premier League</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">La Liga</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Serie A</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Bundesliga</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Ligue 1</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">UEFA Champions League</a>
+                </li>
+            </ul>
+            
+            <!-- Matches Section -->
+            <h3 class="mb-3">Today's Matches</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="match-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="match-time">20:45</div>
+                            <span class="live-badge">LIVE</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="team-name">Manchester United</div>
+                            <div class="score">2 - 1</div>
+                            <div class="team-name">Arsenal</div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button class="odds-btn">1.85</button>
+                            <button class="odds-btn">3.40</button>
+                            <button class="odds-btn">4.20</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="match-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="match-time">21:00</div>
+                            <span>90'</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="team-name">Liverpool</div>
+                            <div class="score">3 - 0</div>
+                            <div class="team-name">Chelsea</div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button class="odds-btn">1.45</button>
+                            <button class="odds-btn">4.00</button>
+                            <button class="odds-btn">6.50</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="match-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="match-time">19:30</div>
+                            <span>Finished</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="team-name">Barcelona</div>
+                            <div class="score">2 - 2</div>
+                            <div class="team-name">Real Madrid</div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button class="odds-btn">2.10</button>
+                            <button class="odds-btn">3.50</button>
+                            <button class="odds-btn">3.10</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="match-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="match-time">22:00</div>
+                            <span>Upcoming</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="team-name">Bayern Munich</div>
+                            <div class="score">VS</div>
+                            <div class="team-name">Dortmund</div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button class="odds-btn">1.70</button>
+                            <button class="odds-btn">3.80</button>
+                            <button class="odds-btn">4.50</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Virtual Games Section -->
+            <h3 class="my-4">Virtual Games</h3>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="virtual-game">
+                        <div class="virtual-game-img">
+                            <i class="fas fa-futbol"></i>
+                        </div>
+                        <div class="p-3">
+                            <h5>Virtual Football</h5>
+                            <p>Next game: 5:00</p>
+                            <button class="btn btn-primary w-100">Place Bet</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="virtual-game">
+                        <div class="virtual-game-img">
+                            <i class="fas fa-basketball-ball"></i>
+                        </div>
+                        <div class="p-3">
+                            <h5>Virtual Basketball</h5>
+                            <p>Next game: 5:30</p>
+                            <button class="btn btn-primary w-100">Place Bet</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="virtual-game">
+                        <div class="virtual-game-img">
+                            <i class="fas fa-flag-checkered"></i>
+                        </div>
+                        <div class="p-3">
+                            <h5>Virtual Racing</h5>
+                            <p>Next race: 6:00</p>
+                            <button class="btn btn-primary w-100">Place Bet</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="virtual-game">
+                        <div class="virtual-game-img">
+                            <i class="fas fa-dog"></i>
+                        </div>
+                        <div class="p-3">
+                            <h5>Virtual Greyhounds</h5>
+                            <p>Next race: 4:45</p>
+                            <button class="btn btn-primary w-100">Place Bet</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Netball and Tennis Section -->
+            <h3 class="my-4">Other Sports</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">Netball</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="match-card">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="match-time">18:30</div>
+                                    <span class="live-badge">LIVE</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="team-name">Australia</div>
+                                    <div class="score">42 - 38</div>
+                                    <div class="team-name">New Zealand</div>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <button class="odds-btn">1.65</button>
+                                    <button class="odds-btn">2.20</button>
+                                </div>
+                            </div>
+                            
+                            <div class="match-card">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="match-time">20:00</div>
+                                    <span>Upcoming</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="team-name">Jamaica</div>
+                                    <div class="score">VS</div>
+                                    <div class="team-name">England</div>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <button class="odds-btn">2.10</button>
+                                    <button class="odds-btn">1.72</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">Tennis</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="match-card">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="match-time">19:15</div>
+                                    <span class="live-badge">LIVE</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="team-name">Djokovic</div>
+                                    <div class="score">2-1</div>
+                                    <div class="team-name">Nadal</div>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <button class="odds-btn">1.90</button>
+                                    <button class="odds-btn">1.95</button>
+                                </div>
+                            </div>
+                            
+                            <div class="match-card">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="match-time">21:30</div>
+                                    <span>Upcoming</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="team-name">Williams</div>
+                                    <div class="score">VS</div>
+                                    <div class="team-name">Osaka</div>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <button class="odds-btn">2.30</button>
+                                    <button class="odds-btn">1.60</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer Section -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="logo text-white">
+                        <i class="fas fa-dice"></i>
+                        <span>Mkyago Bet</span>
+                    </div>
+                    <p class="mt-3">The premier betting platform for all sports enthusiasts with the best odds and fastest payouts.</p>
+                </div>
+                
+                <div class="col-md-2 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-links">Home</a></li>
+                        <li><a href="#" class="footer-links">Sports</a></li>
+                        <li><a href="#" class="footer-links">Live Betting</a></li>
+                        <li><a href="#" class="footer-links">Promotions</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-md-2 mb-4">
+                    <h5>Support</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-links">Help Center</a></li>
+                        <li><a href="#" class="footer-links">FAQ</a></li>
+                        <li><a href="#" class="footer-links">Responsible Gaming</a></li>
+                        <li><a href="#" class="footer-links">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <h5>Connect With Us</h5>
+                    <div class="social-icons mt-3">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5>Download Our App</h5>
+                        <div class="d-flex mt-2">
+                            <button class="btn btn-outline-light me-2"><i class="fab fa-apple"></i> App Store</button>
+                            <button class="btn btn-outline-light"><i class="fab fa-google-play"></i> Play Store</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-md-12 text-center">
+                    <p class="copyright">© 2023 Mkyago Bet. All rights reserved. | 18+ Please gamble responsibly.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // JavaScript for interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate live data updates
+            setInterval(updateLiveMatches, 10000);
+            
+            // Odds buttons functionality
+            const oddsButtons = document.querySelectorAll('.odds-btn');
+            oddsButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // In a real application, this would add the selection to a bet slip
+                    const matchCard = this.closest('.match-card');
+                    const teams = matchCard.querySelectorAll('.team-name');
+                    const matchName = `${teams[0].textContent} vs ${teams[1].textContent}`;
+                    
+                    alert(`Added to bet slip: ${matchName} @ ${this.textContent}`);
+                });
+            });
+            
+            // Sports navigation
+            const sportsNavLinks = document.querySelectorAll('.sports-nav .nav-link');
+            sportsNavLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    sportsNavLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // In a real application, this would load the selected sport's events
+                    const sport = this.textContent;
+                    alert(`Loading ${sport} events...`);
+                });
+            });
+            
+            // League tabs
+            const leagueTabs = document.querySelectorAll('.nav-tabs .nav-link');
+            leagueTabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    leagueTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // In a real application, this would load the selected league's matches
+                    const league = this.textContent;
+                    alert(`Loading ${league} matches...`);
+                });
+            });
+            
+            // Virtual game buttons
+            const virtualGameButtons = document.querySelectorAll('.virtual-game .btn');
+            virtualGameButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const game = this.closest('.virtual-game').querySelector('h5').textContent;
+                    alert(`Placing bet on ${game}`);
+                });
+            });
+            
+            // Function to simulate live match updates
+            function updateLiveMatches() {
+                const liveMatches = document.querySelectorAll('.live-badge');
+                liveMatches.forEach(badge => {
+                    const matchCard = badge.closest('.match-card');
+                    const scoreElement = matchCard.querySelector('.score');
+                    
+                    if (scoreElement) {
+                        const scores = scoreElement.textContent.split(' - ').map(Number);
+                        
+                        // Randomly update score (for simulation only)
+                        if (Math.random() > 0.7) {
+                            const team = Math.floor(Math.random() * 2);
+                            scores[team] += 1;
+                            scoreElement.textContent = `${scores[0]} - ${scores[1]}`;
+                            
+                            // Flash update animation
+                            scoreElement.classList.add('text-success');
+                            setTimeout(() => {
+                                scoreElement.classList.remove('text-success');
+                            }, 1000);
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
